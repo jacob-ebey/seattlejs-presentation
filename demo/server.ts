@@ -12,35 +12,30 @@ const match = {
   loader: route.loader as () => unknown,
 };
 
-await serve(
-  async () => {
-    // Call the loader for our matched route
-    const data = await match.loader();
+await serve(async () => {
+  // Call the loader for our matched route
+  const data = await match.loader();
 
-    // Render the component for our matched route
-    const template = match.Component({ data });
+  // Render the component for our matched route
+  const template = match.Component({ data });
 
-    const encoder = new TextEncoder();
-    const body = new ReadableStream<Uint8Array>({
-      start(controller) {
-        // Render the initial HTML to the stream
-        controller.enqueue(
-          encoder.encode(
-            renderToString(template, {
-              elements: {},
-            })
-          )
-        );
+  const encoder = new TextEncoder();
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      // Render the initial HTML to the stream
+      controller.enqueue(
+        encoder.encode(
+          renderToString(template, {
+            elements: {},
+          })
+        )
+      );
 
-        controller.close();
-      },
-    });
+      controller.close();
+    },
+  });
 
-    return new Response(body, {
-      headers: { "Content-Type": "text/html" },
-    });
-  },
-  {
-    port: 3000,
-  }
-);
+  return new Response(body, {
+    headers: { "Content-Type": "text/html" },
+  });
+});
