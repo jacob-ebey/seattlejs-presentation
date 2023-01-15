@@ -7,7 +7,7 @@ export function loader() {
     criticalData:
       "I'm critical data that blocked the initial render of the page.",
 
-    slowData: new Promise((resolve, reject) => {
+    slowData: new Promise<string>((resolve, reject) => {
       setTimeout(() => {
         resolve(
           "I'm slow data that did NOT block the initial render of the page."

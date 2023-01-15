@@ -1,1 +1,6 @@
 slides.pdf
+
+.env
+.cache/
+build/
+nodes_modules/
