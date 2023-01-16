@@ -35,7 +35,7 @@ A pair of utilities that allow you to "teleport" a promise over the wire and ena
 
 ---
 
-## If you have a slow data source that would block first pain, what do you do?
+## If you have a slow data source that would block first paint, what do you do?
 
 ---
 
@@ -126,6 +126,7 @@ export default function Route() {
 
 - Ability to render a placeholder for the UI and wait for a promise (React's `<Suspense>`)
 - Ability to teleport a promise across the network (Remix's `defer()`)
+- Ability to access the result and handle errors (Remix's `<Await>`)
 
 ---
 
