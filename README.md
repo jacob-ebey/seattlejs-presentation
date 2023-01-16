@@ -124,10 +124,42 @@ export default function Route() {
 
 # The magic dust that makes this all work
 
-- Ability to render a placeholder for the UI and wait for a promise (React's `<Suspense>`)
-- Ability to teleport a promise across the network (Remix's `defer()`)
-- Ability to access the result and handle errors (Remix's `<Await>`)
+- `defer()` allows you to surface a promise from your loader to your ui framework
+  - document requests
+  - client side navigations
+- `<Await>` allows you to access the value and handle errors inline
+- `<Suspense>` allows you to render a placeholder while waiting for the value
 
 ---
 
-# Demo time!
+# `defer()` Demo time!
+
+---
+
+# Review
+
+- No `<Scripts>` / no-hydration cases are handled by React's out-of-order streaming via `<Suspense>`
+- Document request hydration handled by `<Scripts>` serializing a `loaderData.routeId.promiseKey = new Promise()` allowing React to hydrate the `<Suspense>` boundary if de-opted by parent component re-renders and re-suspend on the promise until resolution
+- Client side navigations handled with a streaming response format
+
+---
+
+# Can I have this in XYZ framework?
+
+Probably, let's build a simple version of it together!
+
+---
+
+## What we built
+
+- A mechanism to "teleport" a promise over the wire for use in client side javascript
+
+## What we didn't build
+
+- A one-size-fits all solution to slow data
+
+---
+
+# Thanks!
+
+Find me on Twitter [@ebey_jacob](https://twitter.com/ebey_jacob) or Discord [rmx.as/discord](https://rmx.as/discord)
