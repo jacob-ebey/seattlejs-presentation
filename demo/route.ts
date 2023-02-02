@@ -10,7 +10,7 @@ export async function loader() {
     slowData: await new Promise<string>((resolve, reject) => {
       setTimeout(() => {
         resolve(
-          "I'm slow data that did NOT block the initial render of the page."
+          "I'm slow data that DID block the initial render of the page."
         );
         // reject(new Error("I'm an error!"));
       }, 1000);

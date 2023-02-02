@@ -11,7 +11,7 @@ theme: default
 
 # "Promises" over the wire
 
-Hi, I'm Jacob 👋 I work for Shopify on Remix and React Router
+Hi, I'm Jacob Ebey 👋 I work for Shopify on Remix and React Router
 
 ---
 
@@ -35,7 +35,7 @@ A pair of utilities that allow you to "teleport" a promise over the wire and ena
 
 ---
 
-## If you have a slow data source that would block first pain, what do you do?
+## If you have a slow data source that would block first paint, what do you do?
 
 ---
 
@@ -126,6 +126,14 @@ export default function Route() {
 
 - Ability to render a placeholder for the UI and wait for a promise (React's `<Suspense>`)
 - Ability to teleport a promise across the network (Remix's `defer()`)
+
+---
+
+# Let's build our own
+
+- HTML Templates ``html`<p>hello</p>` `` instead of a framework
+- Promise teleported as variable usable with an html template `<script>` like so `${data.promise}.then()` or `await ${data.promise}`
+- Handle both promise resolve and reject
 
 ---
 

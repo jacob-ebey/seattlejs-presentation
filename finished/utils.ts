@@ -4,14 +4,16 @@ import { type HTMLNode } from "https://esm.sh/html-tagged@0.0.2/lib/html.d.ts";
 // to show `TeleportedPromise` in the type hints instead of `string`.
 type TeleportedPromise = string & Record<string | number | symbol, never>;
 
-type SerializeFrom<T> = T extends (args: unknown) => infer R
+type SerializeObject<T extends { [key: string]: unknown }> = {
+  [k in keyof T]: T[k] extends Promise<unknown> ? TeleportedPromise : T[k];
+};
+
+export type SerializeFrom<T> = T extends (args: unknown) => infer R
   ? R extends { [key: string]: unknown }
-    ? {
-        [k in keyof R]: R[k] extends Promise<unknown>
-          ? TeleportedPromise
-          : R[k];
-      }
-    : R
+    ? SerializeObject<Awaited<R>>
+    : Awaited<R>
+  : T extends { [key: string]: unknown }
+  ? SerializeObject<T>
   : T;
 
 export type RouteProps<LoaderFunctionOrData = unknown> = {
