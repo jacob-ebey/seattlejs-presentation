@@ -12,7 +12,6 @@ export function loader() {
         resolve(
           "I'm slow data that did NOT block the initial render of the page."
         );
-        // reject(new Error("I'm an error!"));
       }, 1000);
     }),
   });

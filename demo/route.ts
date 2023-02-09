@@ -2,17 +2,22 @@ import { html, value } from "https://esm.sh/html-tagged@0.0.2";
 
 import { type RouteProps } from "./utils.ts";
 
-export async function loader() {
+export async function loader({ request }: { request: Request }) {
   return {
     criticalData:
       "I'm critical data that blocked the initial render of the page.",
 
     slowData: await new Promise<string>((resolve, reject) => {
       setTimeout(() => {
-        resolve(
-          "I'm slow data that DID block the initial render of the page."
-        );
-        // reject(new Error("I'm an error!"));
+        const url = new URL(request.url);
+
+        if (url.searchParams.has("error")) {
+          reject(new Error("I'm an error!"));
+        } else {
+          resolve(
+            "I'm slow data that DID block the initial render of the page."
+          );
+        }
       }, 1000);
     }),
   };
@@ -29,7 +34,7 @@ export function Component({ data }: RouteProps<typeof loader>) {
         <main>
           <header>
             <h1>YO!</h1>
-            <p>${value(data.criticalData)}</p>
+            <p id="critical">${value(data.criticalData)}</p>
           </header>
           <section>
             <h2>Below is slow data</h2>

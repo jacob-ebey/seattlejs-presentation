@@ -9,14 +9,14 @@ export class DeferredData<T> {
   processedData: SerializeFrom<T>;
 
   constructor(data: T) {
-    let deferredData: SerializeFrom<T>;
+    let processedData: SerializeFrom<T>;
     const deferredKeys = new Set<string>();
 
     // Skip processing if no need for it
     if (!data || typeof data !== "object") {
-      deferredData = data as SerializeFrom<T>;
+      processedData = data as SerializeFrom<T>;
     } else {
-      deferredData = {} as SerializeFrom<T>;
+      processedData = {} as SerializeFrom<T>;
       // Collect deferred keys to await later
       for (const [key, value] of Object.entries(data)) {
         // Store promise keys for later resolution
@@ -25,11 +25,11 @@ export class DeferredData<T> {
           // Replace the promise with the TeleportedPromise identifier
           // for use in a <script> tag. `SerializeFrom` will do the same
           // for the `data` object passed to the component.
-          Object.assign(deferredData as { [key: string]: unknown }, {
+          Object.assign(processedData as { [key: string]: unknown }, {
             [key]: `__DEFERRED_PROMISES[${JSON.stringify(key)}]`,
           });
         } else {
-          Object.assign(deferredData as { [key: string]: unknown }, {
+          Object.assign(processedData as { [key: string]: unknown }, {
             [key]: value,
           });
         }
@@ -37,7 +37,7 @@ export class DeferredData<T> {
     }
 
     this.originalData = data;
-    this.processedData = deferredData;
+    this.processedData = processedData;
     this.deferredKeys = deferredKeys;
   }
 }
@@ -97,24 +97,25 @@ export function renderToReadableStream(
     );
   }
 
-  const data = deferredData.originalData;
   const encoder = new TextEncoder();
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
       // Render the initial HTML to the stream
       controller.enqueue(encoder.encode(renderToString(template)));
 
-      if (data && typeof data === "object") {
-        const dataObject = data as Record<string, Promise<unknown>>;
+      const originalData = deferredData.originalData as Record<
+        string,
+        Promise<unknown>
+      >;
+      if (originalData && typeof originalData === "object") {
         // Used to make the code below easier to read
         const html = String.raw;
         // A list of promises to wait for before closing the stream
         const waitToCloseStream: Promise<unknown>[] = [];
         for (const key of deferredData.deferredKeys) {
-          const promise = dataObject[key];
           // Push a promise to wait for for each deferred key
           waitToCloseStream.push(
-            promise
+            originalData[key]
               .then((value) => {
                 // When the promise resolves, send a <script> tag to the client
                 // to resolve the TeleportedPromise

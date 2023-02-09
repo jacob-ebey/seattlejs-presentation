@@ -1,18 +1,22 @@
 import { Suspense } from "react";
-import { defer } from "@remix-run/node";
+import { defer, type LoaderArgs } from "@remix-run/node";
 import { Await, Link, useLoaderData } from "@remix-run/react";
 
-export function loader() {
+export function loader({ request }: LoaderArgs) {
   return defer({
     criticalData:
       "I'm critical data that blocked the initial render of the page.",
 
     slowData: new Promise<string>((resolve, reject) => {
       setTimeout(() => {
-        resolve(
-          "I'm slow data that did NOT block the initial render of the page."
-        );
-        // reject(new Error("I'm an error!"));
+        const url = new URL(request.url);
+        if (url.searchParams.has("error")) {
+          reject(new Error("I'm an error!"));
+        } else {
+          resolve(
+            "I'm slow data that did NOT block the initial render of the page."
+          );
+        }
       }, 1000);
     }),
   });

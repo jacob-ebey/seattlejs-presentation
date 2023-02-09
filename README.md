@@ -29,12 +29,6 @@ Hi, I'm Jacob Ebey 👋 I work for Shopify on Remix and React Router
 
 ---
 
-# `defer()` and `<Await>`
-
-A pair of utilities that allow you to "teleport" a promise over the wire and enables React `<Suspense>` usage both with and without client side hydration.
-
----
-
 ## If you have a slow data source that would block first paint, what do you do?
 
 ---
@@ -46,6 +40,12 @@ A pair of utilities that allow you to "teleport" a promise over the wire and ena
 </style>
 
 ![Graph showing waterfall of client side data fetching](./images/client-fetching.svg)
+
+---
+
+# `defer()` and `<Await>`
+
+A pair of utilities that allow you to "teleport" a promise over the wire and enables React `<Suspense>` usage both with and without client side hydration.
 
 ---
 
@@ -132,12 +132,11 @@ export default function Route() {
 
 ---
 
-# Demo time!
-# `defer()` Demo time!
+# `defer()` time!
 
 ---
 
-# Review
+# `defer()` recap
 
 - No `<Scripts />` / no-hydration cases are handled by React's out-of-order streaming via `<Suspense>`
 - Document request hydration handled by `<Scripts>` serializing a `loaderData.routeId.promiseKey = new Promise()` allowing React to hydrate the `<Suspense>` boundary if de-opted by parent component re-renders and re-suspend on the promise until resolution
@@ -150,18 +149,21 @@ export default function Route() {
 Probably, let's build a simple version of it together!
 
 - HTML Templates ``html`<p>hello</p>` `` instead of a framework
-- Promise teleported as variable usable with an html template `<script>` like so `${data.promise}.then()` or `await ${data.promise}`
+- Promise teleported as variable usable with an html template `<script>`
+  - `${data.promise}.then()` 
+  - `await ${data.promise}`
 - Handle both promise resolve and reject
+
+## DIY demo time!
 
 ---
 
-## What we built
+# DIY Recap
 
-- A mechanism to "teleport" a promise over the wire for use in client side javascript
-
-## What we didn't build
-
-- A one-size-fits all solution to slow data
+- Replaced data with promise identifier
+- Injected `<script>` to setup promises for the identifiers
+- Resolve / reject injected promise with subsequent `<script>` we stream down
+- Essentially identical to how Remix document requests work
 
 ---
 
